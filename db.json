@@ -1,0 +1,24 @@
+
+{
+    "data": [
+      { 
+        "id": 1, 
+        "name": "John Doe", 
+        "email": "johndoe@example.com", 
+        "class": "A1" 
+      },
+      { 
+        "id": 2, 
+        "name": "Jane Smith", 
+        "email": "janesmith@example.com", 
+        "class": "B2" 
+      },
+      { 
+        "id": 3, 
+        "name": "Mike", 
+        "email": "mikeypoo@example.com", 
+        "class": "B3" 
+      }
+    ]
+  }
+  

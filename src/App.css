@@ -1,0 +1,192 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+  min-height: 100vh; 
+}
+
+h2 {
+  font-size: 28px;
+  text-align: center; 
+}
+
+h3 {
+  font-size: 22px;
+  text-decoration: underline;
+  text-align: center; 
+}
+
+.signheading {
+  margin: 40px 0; 
+}
+
+label {
+  font-size: 16px;
+}
+
+.labels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%; 
+  margin-bottom: 10px;
+}
+
+.label-input-container label {
+  margin-right: 10px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+p {
+  margin: 15px 0;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.dghhdsh {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.firstSection {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 2rem;
+  width: 100%; 
+}
+
+.fullsection {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%; 
+}
+
+.secondSection {
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+@media screen and (min-width: 768px) { 
+  .fullsection {
+    flex-direction: row;
+    justify-content: space-between; 
+  }
+
+  .firstSection {
+    width: 45%; 
+    margin-right: 20px; 
+  }
+
+  .secondSection {
+    width: 45%; 
+  }
+}
+
+@media screen and (max-width: 768px) { 
+  .firstSection {
+    display: none; 
+  }
+}
+
+.oioi{
+  padding: '15px';
+  background-color: green;
+  border-radius: 4px ;
+  cursor: pointer;
+  width: 90%,;
+  margin: 20px auto ;
+  display: block,
+}
+
+
+.stdlist{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+/* ExamResult.css */
+.exam-result-container {
+  font-family: sans-serif;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f8f8f8; 
+}
+
+.student-info {
+  margin-bottom: 20px;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.result-table th, .result-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.result-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.overall-result {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #45a049; 
+}
+
+.result-table tr:nth-child(even) {
+  background-color: #f2f2f2; 
+}
