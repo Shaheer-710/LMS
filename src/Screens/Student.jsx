@@ -45,26 +45,20 @@ const menuItems = [
     label: 'School',
     subItems: [
       { label: 'Teacher Registration', path: '/teacherregister' },
-      { label: 'Student Registration', path: '/studentregistration' },
+      { label: 'Student Registration', path: '/studentregestration' },
     ],
   },
   {
     label: 'Syllabus',
-    subItems: [
-      { label: 'Syllabus List', path: '/syllabuslist' },
-    ],
+    subItems: [{ label: 'Syllabus List', path: '/syllabuslist' }],
   },
   {
     label: 'Class',
-    subItems: [
-      { label: 'TimeTable', path: '/tmtable' },
-    ],
+    subItems: [{ label: 'TimeTable', path: '/timetable' }],
   },
   {
     label: 'Fees',
-    subItems: [
-      { label: 'Fee Challan', path: '/fees' },
-    ],
+    subItems: [{ label: 'Fee Challan', path: '/fees' }],
   },
   {
     label: 'Admission',
@@ -75,11 +69,10 @@ const menuItems = [
   },
   {
     label: 'Exam',
-    subItems: [
-      { label: 'Result', path: '/resultsrc' },
-    ],
+    subItems: [{ label: 'Result', path: '/resultsrc' }],
   },
 ];
+
 
 function Student(props) { 
   const { window } = props;

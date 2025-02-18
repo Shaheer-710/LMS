@@ -4,21 +4,20 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import ForgotPassword from '../component/ForgotPassword';
-import { Navigate, useNavigate } from 'react-router-dom';
+import ForgotPassword from '../component/ForgotPassword'; // Adjust the path if necessary
+import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import auth from '../FirebaseConfig';
+import { getDatabase, ref, set } from "firebase/database";
+import auth from '../FirebaseConfig'; // Adjust the path if necessary
 
-
+// Card and SignInContainer styles (Keep these as they are)
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -61,14 +60,16 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
+
 export default function SignIn(props) {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate() 
-
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -78,43 +79,59 @@ export default function SignIn(props) {
     setOpen(false);
   };
 
-  const redirect3 = () =>{
-    navigate('/')
-  }
+  const redirect3 = () => {
+    navigate('/');
+  };
 
   const handleSubmit = (event) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-    }else{
-      signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    const user = userCredential.user;
-    console.log(user);
-    
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(error);
-    
-  });
+    event.preventDefault();
 
-      navigate('/dashboard')
+    if (!validateInputs()) {
+      return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("User logged in:", user);
+
+        const db = getDatabase();
+        const userRef = ref(db, 'users/userdetails/' + user.uid);
+
+        set(userRef, {
+          email: email,
+        })
+          .then(() => {
+            navigate('/dashboard');
+          })
+          .catch((error) => {
+            console.error("Error writing to database:", error);
+            // Handle database errors (e.g., display a message to the user)
+          });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Sign In Error:", errorCode, errorMessage);
+
+        if (errorCode === 'auth/wrong-password') {
+          setPasswordError(true);
+          setPasswordErrorMessage('Incorrect password.');
+        } else if (errorCode === 'auth/user-not-found') {
+          setEmailError(true);
+          setEmailErrorMessage('User not found.');
+        } else {
+          // Handle other errors
+          setPasswordError(true);
+          setPasswordErrorMessage(errorMessage);
+        }
+      });
   };
 
   const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError(true);
       setEmailErrorMessage('Please enter a valid email address.');
       isValid = false;
@@ -123,7 +140,7 @@ export default function SignIn(props) {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!password || password.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
       isValid = false;
@@ -140,11 +157,7 @@ export default function SignIn(props) {
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-          >
+          <Typography component="h1" variant="h4" sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}>
             Sign in
           </Typography>
           <Box
@@ -173,6 +186,8 @@ export default function SignIn(props) {
                 fullWidth
                 variant="outlined"
                 color={emailError ? 'error' : 'primary'}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </FormControl>
             <FormControl>
@@ -190,6 +205,8 @@ export default function SignIn(props) {
                 fullWidth
                 variant="outlined"
                 color={passwordError ? 'error' : 'primary'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
             <FormControlLabel
@@ -197,26 +214,16 @@ export default function SignIn(props) {
               label="Remember me"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={validateInputs}
-            >
+            <Button type="submit" fullWidth variant="contained">
               Sign in
             </Button>
           </Box>
-          
-            <Typography sx={{ textAlign: 'center' }}>
-              Don&apos;t have an account?{' '}
-              <Button
-              onClick={redirect3}
-                variant="body2"
-                sx={{ alignSelf: 'center' }}
-              >
-                Sign up
-              </Button>
-            </Typography>
+          <Typography sx={{ textAlign: 'center' }}>
+            Don't have an account?{' '}
+            <Button onClick={redirect3} variant="body2" sx={{ alignSelf: 'center' }}>
+              Sign up
+            </Button>
+          </Typography>
         </Card>
       </SignInContainer>
     </>
