@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -14,6 +13,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, set , push } from "firebase/database"; 
 import auth from '../FirebaseConfig'; 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -92,6 +92,19 @@ export default function SignUp(props) {
           
         });
     }
+
+    const db = getDatabase()
+    const userRef = push(ref(db,'users/userdetails'))
+    set(userRef, {
+      email: useremail,
+      name: name, 
+    })
+    .then(() => {
+      navigate('/login');
+    })
+    .catch((error) => {
+      console.error("Error writing to database:", error);
+    });
   };
 
   return (

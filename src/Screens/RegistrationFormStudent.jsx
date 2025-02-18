@@ -14,37 +14,25 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Button from '../component/Button/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
+import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import {useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 import axios from 'axios';
-
 
 const drawerWidth = 240;
 
-
 const Card = styled(MuiCard)(({ theme }) => ({
-  // ... (Card styles - same as before)
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
-
-
-
-
 
 const menuItems = [
   {
@@ -69,26 +57,20 @@ const menuItems = [
     label: 'School',
     subItems: [
       { label: 'Teacher Registration', path: '/teacherregister' },
-      { label: 'Student Registration', path: '/studentregistration' },
+      { label: 'Student Registration', path: '/studentregestration' },
     ],
   },
   {
     label: 'Syllabus',
-    subItems: [
-      { label: 'Syllabus List', path: '/syllabuslist' },
-    ],
+    subItems: [{ label: 'Syllabus List', path: '/syllabuslist' }],
   },
   {
     label: 'Class',
-    subItems: [
-      { label: 'TimeTable', path: '/tmtable' },
-    ],
+    subItems: [{ label: 'TimeTable', path: '/timetable' }],
   },
   {
     label: 'Fees',
-    subItems: [
-      { label: 'Fee Challan', path: '/fees' },
-    ],
+    subItems: [{ label: 'Fee Challan', path: '/fees' }],
   },
   {
     label: 'Admission',
@@ -99,79 +81,74 @@ const menuItems = [
   },
   {
     label: 'Exam',
-    subItems: [
-      { label: 'Result', path: '/resultsrc' },
-    ],
+    subItems: [{ label: 'Result', path: '/resultsrc' }],
   },
 ];
 
 
-function Studentregistration(props ) {
-   
-  const [useremail, setuseremail] = React.useState('');
-  const [name, setName] = React.useState('');
-
-
-  const [formdata , setformdata] = React.useState({
-    name:'' ,
-    useremail:'' ,
-  })
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const buttonpost = ()=>{
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.post('http://localhost:3000/data' , ...formdata);
-          setData(response.data)
-        } catch (err) {
-          setError(error);
-          console.error("Error fetching data:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchData();
-    }, []);
-  }
-
-
+function Studentregistration(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-  const [open, setOpen] = React.useState({}); // State to manage dropdown open/close
-  
-  
+  const [open, setOpen] = React.useState({});
+  const [useremail, setUserEmail] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [studentClass, setStudentClass] = React.useState('');
+  const [data, setData] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
   };
-  
+
   const handleDrawerTransitionEnd = () => {
     setIsClosing(false);
   };
-  
+
   const handleDrawerToggle = () => {
     if (!isClosing) {
       setMobileOpen(!mobileOpen);
     }
   };
-  
+
   const handleClick = (label) => {
     setOpen({ ...open, [label]: !open[label] });
   };
 
-  const isPathActive = (path) => { 
+  const isPathActive = (path) => {
     return location.pathname === path;
-};
-  
+  };
+
+  const buttonpost = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post('http://localhost:3000/data', {
+        email: useremail,
+        name,
+        class: studentClass,
+      });
+      setData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      setError(error.message);
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const drawer = (
     <div>
       <Toolbar />
       <Divider />
       <List>
-        {menuItems.map((item ) => (
+        {menuItems.map((item) => (
           <React.Fragment key={item.label}>
             <ListItem disablePadding>
               <ListItemButton onClick={() => handleClick(item.label)}>
@@ -184,7 +161,10 @@ function Studentregistration(props ) {
                 {item.subItems.map((subItem) => (
                   <ListItem key={subItem.label} disablePadding>
                     <ListItemButton
-                      sx={{ pl: 4, backgroundColor: isPathActive(subItem.path) ? '#e0e0e0' : 'transparent' }} // Highlight active link
+                      sx={{
+                        pl: 4,
+                        backgroundColor: isPathActive(subItem.path) ? '#e0e0e0' : 'transparent',
+                      }}
                       onClick={() => {
                         navigate(subItem.path);
                         if (mobileOpen) {
@@ -205,8 +185,7 @@ function Studentregistration(props ) {
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
-  
-  const navigate = useNavigate(); 
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -244,7 +223,7 @@ function Studentregistration(props ) {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -266,79 +245,77 @@ function Studentregistration(props ) {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+      >
         <Toolbar />
         <CssBaseline enableColorScheme />
-      <SignUpContainer direction="column" justifyContent="space-between">
-             
-                <h1>Student Register</h1>
-
-        <Card variant="outlined">
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-          >
-            Register
-          </Typography>
-          <Box
-            component="form"
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-          >
-            <FormControl>
-              <FormLabel htmlFor="name">Full name</FormLabel>
-              <TextField
-                autoComplete="name"
-                name="name"
-                required
-                fullWidth
-                id="name"
-                placeholder="Jon Snow"
-                value={name} // Bind the value to the state
-                onChange={(e) => setName(e.target.value)} 
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                placeholder="your@email.com"
-                name="email"
-                autoComplete="email"
-                variant="outlined"
-                value={useremail}
-                onChange={(e) => setuseremail(e.target.value)}
-              />
-            </FormControl>
-
-
-            <FormControl>
-              <FormLabel >Class</FormLabel>
-              <TextField
-                required
-                fullWidth
-                id="class"
-                placeholder="Classname"
-                variant="outlined"
-                value={useremail}
-                onChange={(e) => setuseremail(e.target.value)}
-              />
-            </FormControl>
-            
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={buttonpost}
+        <SignUpContainer direction="column" justifyContent="space-between">
+          <h1>Student Register</h1>
+          <Card variant="outlined">
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
             >
               Register
-            </Button>
-          </Box>
-
-        </Card>
-      </SignUpContainer>
+            </Typography>
+            <Box
+              component="form"
+              sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+            >
+              <FormControl>
+                <FormLabel htmlFor="name">Full name</FormLabel>
+                <TextField
+                  autoComplete="name"
+                  name="name"
+                  required
+                  fullWidth
+                  id="name"
+                  placeholder="Jon Snow"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="email">Email</FormLabel>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  placeholder="your@email.com"
+                  name="email"
+                  autoComplete="email"
+                  variant="outlined"
+                  value={useremail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Class</FormLabel>
+                <TextField
+                  required
+                  fullWidth
+                  id="class"
+                  placeholder="Classname"
+                  variant="outlined"
+                  value={studentClass}
+                  onChange={(e) => setStudentClass(e.target.value)}
+                />
+              </FormControl>
+              {error && <Typography color="error">{error}</Typography>}
+              {loading && <Typography>Loading...</Typography>}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                onClick={buttonpost}
+                disabled={loading}
+              >
+                Register
+              </Button>
+            </Box>
+          </Card>
+        </SignUpContainer>
       </Box>
     </Box>
   );

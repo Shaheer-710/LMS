@@ -18,6 +18,10 @@ export default function Table() {
 
 
   useEffect(() => {
+    ytdata()
+  }, []);
+
+  const ytdata = ()=>{
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:3000/data');
@@ -32,7 +36,7 @@ export default function Table() {
     };
 
     fetchData();
-  }, []);
+  }
 
   if (loading) {
     return <div>Loading...</div>;
